@@ -1,5 +1,6 @@
 package basisDemo_01;
 
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.Scanner;
 
@@ -36,6 +37,8 @@ public class LinkedListStack<Item> implements Iterable<Item> {
     //元素实际个数
     private int N;
 
+    private int count = 0;
+
     @Override
     public Iterator<Item> iterator() {
         return new LinkedListIterator();
@@ -44,14 +47,19 @@ public class LinkedListStack<Item> implements Iterable<Item> {
     public class LinkedListIterator implements Iterator<Item> {
 
         private Node currentNode = first;
+        private int num = count;
 
         @Override
         public boolean hasNext() {
+            if (num != count)
+                throw new ConcurrentModificationException();
             return currentNode != null;
         }
 
         @Override
         public Item next() {
+            if (num != count)
+                throw new ConcurrentModificationException();
             Item item = currentNode.item;
             currentNode = currentNode.next;
             return item;
@@ -86,6 +94,7 @@ public class LinkedListStack<Item> implements Iterable<Item> {
         first.next = oldFirst;
 
         N++;
+        count++;
     }
 
     /**
@@ -100,6 +109,7 @@ public class LinkedListStack<Item> implements Iterable<Item> {
         //使first引用first的下一个结点
         first = first.next;
         N--;
+        count++;
         return item;
     }
 
