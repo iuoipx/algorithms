@@ -11,6 +11,7 @@ public class ResizingArrayQueue<Item> implements Iterable<Item> {
 
     //测试
     public static void main(String[] args) {
+
         ResizingArrayQueue<String> resizingArrayQueue = new ResizingArrayQueue<>();
 
         Scanner scanner = new Scanner(System.in);
@@ -137,3 +138,4 @@ public class ResizingArrayQueue<Item> implements Iterable<Item> {
         }
     }
 }
+
