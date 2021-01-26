@@ -2,6 +2,7 @@ package basisDemo_01;
 
 import java.util.ConcurrentModificationException;
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 /**
@@ -24,10 +25,7 @@ public class LinkedListStack<Item> implements Iterable<Item> {
             } else if (!linkedListStack.isEmpty()) {
                 System.out.print(linkedListStack.pop() + "出栈， ");
             }
-            System.out.print("当前栈内容: [");
-            for (String s : linkedListStack)
-                System.out.print(s + " ");
-            System.out.println("]");
+            System.out.println("当前栈内容: [" + linkedListStack.toString() + "]");
         }
     }
 
@@ -37,7 +35,13 @@ public class LinkedListStack<Item> implements Iterable<Item> {
     //元素实际个数
     private int N;
 
-    private int count = 0;
+    private int count;
+
+    public LinkedListStack() {
+        first = null;
+        N = 0;
+        count = 0;
+    }
 
     @Override
     public Iterator<Item> iterator() {
@@ -60,6 +64,8 @@ public class LinkedListStack<Item> implements Iterable<Item> {
         public Item next() {
             if (num != count)
                 throw new ConcurrentModificationException();
+            if (!hasNext())
+                throw new NoSuchElementException();
             Item item = currentNode.item;
             currentNode = currentNode.next;
             return item;
@@ -67,8 +73,8 @@ public class LinkedListStack<Item> implements Iterable<Item> {
     }
 
     private class Node {
-        Item item;
-        Node next;
+        private Item item;
+        private Node next;
     }
 
     public boolean isEmpty() {
@@ -103,6 +109,8 @@ public class LinkedListStack<Item> implements Iterable<Item> {
      * @return
      */
     public Item pop() {
+        if (isEmpty())
+            throw new NoSuchElementException("stack is null");
         //保存首部元素的信息
         Item item = first.item;
 
@@ -113,4 +121,22 @@ public class LinkedListStack<Item> implements Iterable<Item> {
         return item;
     }
 
+    /**
+     * 返回栈顶元素
+     *
+     * @return
+     */
+    public Item peek() {
+        if (isEmpty())
+            throw new NoSuchElementException("stack is null");
+        return first.item;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder s = new StringBuilder();
+        for (Item item : this)
+            s.append(item + " ");
+        return s.toString();
+    }
 }

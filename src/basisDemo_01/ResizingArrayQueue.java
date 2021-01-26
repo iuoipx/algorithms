@@ -26,24 +26,29 @@ public class ResizingArrayQueue<Item> implements Iterable<Item> {
             } else if (!resizingArrayQueue.isEmpty()) {
                 System.out.print(resizingArrayQueue.dequeue() + "出队列， ");
             }
-            System.out.print("当前队列内容: [");
-            for (String s : resizingArrayQueue)
-                System.out.print(s + " ");
+            System.out.print("当前队列内容: [" + resizingArrayQueue.toString());
             System.out.println("]，队列当前总长度为:" + resizingArrayQueue.maxSize()
                     + "，" + resizingArrayQueue.showInfo());
         }
     }
 
-    private Item a[] = (Item[]) new Object[1];
+    private Item a[];
 
     //指向数组第一个元素，下标
-    private int head = 0;
+    private int head;
 
     //指向数组最后一个元素，下标+1
-    private int tail = 0;
+    private int tail;
 
     //表示数组元素实际个数，tail-head
-    private int N = 0;
+    private int N;
+
+    public ResizingArrayQueue() {
+        a = (Item[]) new Object[1];
+        head = 0;
+        tail = 0;
+        N = 0;
+    }
 
     public boolean isEmpty() {
         return N == 0;
@@ -80,6 +85,10 @@ public class ResizingArrayQueue<Item> implements Iterable<Item> {
         for (int i = head; i < tail; i++)
             temp[j++] = a[i];
         a = temp;
+
+        //resize之后重置数组，重新计数
+        head = 0;
+        tail = N;
     }
 
     public void enqueue(Item item) {
@@ -87,33 +96,33 @@ public class ResizingArrayQueue<Item> implements Iterable<Item> {
         //当 tail(最后一个元素下标+1) 越界时，扩大一倍
         if (tail == a.length) {
             resize(a.length * 2);
-
-            //resize之后重置数组，重新计数
-            head = 0;
-            tail = N;
         }
 
         a[tail++] = item;
-        N = tail - head;
+
+        N++;
     }
 
     public Item dequeue() {
         Item item = a[head++];
 
-        N = tail - head;
+        N--;
 
         a[head - 1] = null; //回收对象
 
         //当实际元素数量小于数组长度 1/4 时，缩小一倍
-        if (N == a.length / 4) {
+        if (N > 0 && N == a.length / 4) {
             resize(a.length / 2);
-
-            //resize之后重置数组，重新计数
-            head = 0;
-            tail = N;
         }
         return item;
     }
+
+    public Item peek() {
+        if (isEmpty())
+            throw new NoSuchElementException();
+        return a[head];
+    }
+
 
     @Override
     public Iterator<Item> iterator() {
@@ -136,6 +145,14 @@ public class ResizingArrayQueue<Item> implements Iterable<Item> {
             }
             return a[n++];
         }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder s = new StringBuilder();
+        for (Item item : this)
+            s.append(item + " ");
+        return s.toString();
     }
 }
 

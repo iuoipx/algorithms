@@ -30,9 +30,7 @@ public class ResizingArrayStack<Item> implements Iterable<Item> {
                 System.out.print(resizingArrayStack.pop() + "出栈， ");
             }
 
-            System.out.print("当前栈内容: [");
-            for (String s : resizingArrayStack)
-                System.out.print(s + " ");
+            System.out.print("当前栈内容: [" + resizingArrayStack.toString());
             System.out.println("]，栈当前总长度为:" + resizingArrayStack.maxSize());
         }
 
@@ -40,10 +38,15 @@ public class ResizingArrayStack<Item> implements Iterable<Item> {
     }
 
     //栈数组,长度为1
-    private Item a[] = (Item[]) new Object[1];
+    private Item a[];
 
     //栈元素实际数量
-    private int N = 0;
+    private int N;
+
+    public ResizingArrayStack() {
+        a = (Item[]) new Object[1];
+        N = 0;
+    }
 
     public boolean isEmpty() {
         return N == 0;
@@ -76,6 +79,9 @@ public class ResizingArrayStack<Item> implements Iterable<Item> {
      * @return
      */
     public Item pop() {
+
+        if (isEmpty())
+            throw new NoSuchElementException("stack is null");
         Item item = a[--N];
 
         //将弹出的数组元素的值置为 null，回收内存
@@ -86,6 +92,17 @@ public class ResizingArrayStack<Item> implements Iterable<Item> {
             resize(a.length / 2);
 
         return item;
+    }
+
+    /**
+     * 返回栈顶元素
+     *
+     * @return
+     */
+    public Item peek() {
+        if (isEmpty())
+            throw new NoSuchElementException("stack is null");
+        return a[N - 1];
     }
 
     /**
@@ -111,7 +128,11 @@ public class ResizingArrayStack<Item> implements Iterable<Item> {
     private class ReverseArrayIterator implements Iterator<Item> {
 
         //逆序，从栈顶遍历
-        private int i = N;
+        private int i;
+
+        public ReverseArrayIterator() {
+            i = N;
+        }
 
         @Override
         public boolean hasNext() {
@@ -120,10 +141,18 @@ public class ResizingArrayStack<Item> implements Iterable<Item> {
 
         @Override
         public Item next() {
-            if (i == 0) {
+            if (!hasNext()) {
                 throw new NoSuchElementException();
             }
             return a[--i];
         }
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder s = new StringBuilder();
+        for (Item item : this)
+            s.append(item + " ");
+        return s.toString();
     }
 }

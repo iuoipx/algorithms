@@ -1,6 +1,7 @@
 package basisDemo_01;
 
 import java.util.Iterator;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 /**
@@ -25,11 +26,7 @@ public class LinkedListQueue<Item> implements Iterable<Item> {
             } else if (!linkedListQueue.isEmpty()) {
                 System.out.print(linkedListQueue.dequeue() + "出队列， ");
             }
-            System.out.print("当前队列内容: [");
-            for (String s : linkedListQueue)
-                System.out.print(s + " ");
-            System.out.println("]，队列首元素：" + linkedListQueue.first.item + "，队列尾元素：" + linkedListQueue.last.item);
-
+            System.out.println("当前队列内容: [" + linkedListQueue.toString() + "]");
         }
     }
 
@@ -40,6 +37,12 @@ public class LinkedListQueue<Item> implements Iterable<Item> {
     private Node last;
 
     private int N;
+
+    public LinkedListQueue() {
+        first = null;
+        last = null;
+        N = 0;
+    }
 
     @Override
     public Iterator<Item> iterator() {
@@ -57,6 +60,8 @@ public class LinkedListQueue<Item> implements Iterable<Item> {
 
         @Override
         public Item next() {
+            if (!hasNext())
+                throw new NoSuchElementException();
             Item item = currentNode.item;
             currentNode = currentNode.next;
             return item;
@@ -104,6 +109,8 @@ public class LinkedListQueue<Item> implements Iterable<Item> {
      * @return
      */
     public Item dequeue() {
+        if (isEmpty())
+            throw new NoSuchElementException();
         //保存队首结点信息
         Item item = first.item;
 
@@ -116,5 +123,19 @@ public class LinkedListQueue<Item> implements Iterable<Item> {
         }
         N--;
         return item;
+    }
+
+    public Item peek() {
+        if (isEmpty())
+            throw new NoSuchElementException();
+        return first.item;
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder s = new StringBuilder();
+        for (Item item : this)
+            s.append(item + " ");
+        return s.toString();
     }
 }
