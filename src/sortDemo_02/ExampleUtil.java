@@ -26,7 +26,7 @@ public class ExampleUtil {
      * @param i
      * @param j
      */
-    public static void each(Comparable[] a, int i, int j) {
+    public static void exch(Comparable[] a, int i, int j) {
         Comparable t = a[i];
         a[i] = a[j];
         a[j] = t;
