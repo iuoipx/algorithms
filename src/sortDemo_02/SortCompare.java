@@ -13,6 +13,10 @@ public class SortCompare {
             InsertionSort.sort(a);
         if (alg.equals("Selection"))
             SelectionSort.sort(a);
+        if (alg.equals("Shell"))
+            ShellSort.sort(a);
+        if (alg.equals("Merge"))
+            MergeSort.sort(a);
         return stopwatch.elapsedTime();
     }
 
@@ -44,18 +48,26 @@ public class SortCompare {
     public static void main(String[] args) {
 
         //模拟命令行参数
-        String[] arg = {"Insertion", "Selection", "1000", "1000"};
+        String[] arg = {"Insertion", "Selection", "Shell", "Merge", "10000", "100"};
         String alg1 = arg[0];
         String alg2 = arg[1];
-        int N = Integer.parseInt(arg[2]);
-        int T = Integer.parseInt(arg[3]);
+        String alg3 = arg[2];
+        String alg4 = arg[3];
+        int N = Integer.parseInt(arg[4]);
+        int T = Integer.parseInt(arg[5]);
 
         double t1 = timeRandomInput(alg1, N, T);
         double t2 = timeRandomInput(alg2, N, T);
+        double t3 = timeRandomInput(alg3, N, T);
+        double t4 = timeRandomInput(alg4, N, T);
 
         System.out.printf("%s 总时间: %.3f\r\n", alg1, t1);
         System.out.printf("%s 总时间: %.3f\r\n", alg2, t2);
-        System.out.printf("%s 比 %s 快 %.1f 倍", alg1, alg2, t2 / t1);
+        System.out.printf("%s 总时间: %.3f\r\n", alg3, t3);
+        System.out.printf("%s 总时间: %.3f\r\n", alg4, t4);
+        System.out.printf("%s 比 %s 快 %.1f 倍\r\n", alg1, alg2, t2 / t1);
+        System.out.printf("%s 比 %s 快 %.1f 倍\r\n", alg3, alg1, t1 / t3);
+        System.out.printf("%s 比 %s 快 %.1f 倍\r\n", alg4, alg1, t1 / t4);
     }
 
 }
