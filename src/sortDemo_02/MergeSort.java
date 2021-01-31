@@ -10,11 +10,14 @@ public class MergeSort {
 
     private static Comparable[] aux;
 
-    public static void sort(Comparable[] a) {
-        aux = new Comparable[a.length];
-        sort(a, 0, a.length - 1);
-    }
-
+    /**
+     * 自顶向下
+     * @param a
+     */
+//    public static void sort(Comparable[] a) {
+//        aux = new Comparable[a.length];
+//        sort(a, 0, a.length - 1);
+//    }
     public static void sort(Comparable[] a, int lo, int hi) {
         if (hi <= lo) return;
 
@@ -34,10 +37,22 @@ public class MergeSort {
         //递归排序右半边
         sort(a, mid + 1, hi);
 
-//        if (lo == 0 && mid == 7 && hi == 15)
-//            System.out.println(Arrays.toString(a));
-
         merge(a, lo, mid, hi);
+    }
+
+
+    /**
+     * 自底向上
+     *
+     * @param a
+     */
+    public static void sort(Comparable[] a) {
+        aux = new Comparable[a.length];
+        int N = a.length;
+        for (int sz = 1; sz < N; sz = sz + sz) {
+            for (int lo = 0; lo < N - sz; lo += sz + sz)
+                merge(a, lo, lo + sz - 1, Math.min(lo + sz + sz - 1, N - 1));
+        }
     }
 
     //原地归并，先将传进来的数组数据 a复制给临时数组，之后排序完毕再还给a
