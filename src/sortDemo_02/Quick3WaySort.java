@@ -21,6 +21,7 @@ public class Quick3WaySort {
         Comparable v = a[lo];
 
         //三向切分数组 a[lo..lt-1] < v = a[lt...gt] < a[gt+1...hi]
+        //lt左边的元素比v小，gt右边的元素比v大，v = a[lt..gt]
         while (i <= gt) {
             int cmp = a[i].compareTo(v);
             //如果 a[i]小于v,交换a[i]与a[lt],将lt和i加一

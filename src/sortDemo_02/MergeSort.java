@@ -1,6 +1,5 @@
 package sortDemo_02;
 
-import java.util.Arrays;
 import java.util.Scanner;
 
 /**
