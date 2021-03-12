@@ -1,16 +1,38 @@
 package searchDemo_03;
 
+
+import edu.princeton.cs.algs4.Queue;
+
+import java.util.Iterator;
+import java.util.Scanner;
+
 /**
  * 二分查找（基于有序数组）
  */
 public class BinarySearchST<Key extends Comparable<Key>, Value> {
+    private static final int INIT_CAPACITY = 2;
     private Key[] keys;
     private Value[] values;
-    private int N;
+    private int N = 0;
+
+    public BinarySearchST() {
+        this(INIT_CAPACITY);
+    }
 
     public BinarySearchST(int capacity) {
         keys = (Key[]) new Comparable[capacity];
         values = (Value[]) new Comparable[capacity];
+    }
+
+    private void resize(int capacity) {
+        Key[] tempk = (Key[]) new Comparable[capacity];
+        Value[] tempv = (Value[]) new Object[capacity];
+        for (int i = 0; i < N; i++) {
+            tempk[i] = keys[i];
+            tempv[i] = values[i];
+        }
+        values = tempv;
+        keys = tempk;
     }
 
     public int size() {
@@ -40,7 +62,13 @@ public class BinarySearchST<Key extends Comparable<Key>, Value> {
 
     public Key floor(Key key) {
         int i = rank(key);
+        if (i < N && keys[i].compareTo(key) == 0)
+            return keys[i];
         return keys[i - 1];
+    }
+
+    public boolean contains(Key key) {
+        return get(key) != null;
     }
 
     public void delete(Key key) {
@@ -64,6 +92,22 @@ public class BinarySearchST<Key extends Comparable<Key>, Value> {
         N--;
         keys[N] = null;
         keys[N] = null;
+
+        if (N > 0 && N == keys.length / 4)
+            resize(keys.length / 2);
+    }
+
+    public Iterable<Key> keys() {
+        return keys(min(), max());
+    }
+
+    public Iterable<Key> keys(Key lo, Key hi) {
+        Queue<Key> queue = new Queue<Key>();
+        for (int i = rank(lo); i < rank(hi); i++)
+            queue.enqueue(keys[i]);
+        if (contains(hi))
+            queue.enqueue(keys[rank(hi)]);
+        return queue;
     }
 
     public Value get(Key key) {
@@ -109,6 +153,9 @@ public class BinarySearchST<Key extends Comparable<Key>, Value> {
             return;
         }
 
+        if (N == keys.length)
+            resize(2 * keys.length);
+
         //key不存在的话，将key所在位置i后面的元素都往后移一位
         for (int j = N; j > i; j--) {
             keys[j] = keys[j - 1];
@@ -118,5 +165,18 @@ public class BinarySearchST<Key extends Comparable<Key>, Value> {
         keys[i] = key;
         values[i] = value;
         N++;
+    }
+
+    public static void main(String[] args) {
+        BinarySearchST<String, Integer> st = new BinarySearchST<String, Integer>();
+        Scanner scanner = new Scanner(System.in);
+        //S E A R C H E X A M P L E
+        String[] a = scanner.nextLine().split(" ");
+        for (int i = 0; i < a.length; i++) {
+            String key = a[i];
+            st.put(key, i);
+        }
+        for (String s : st.keys())
+            System.out.println(s + " " + st.get(s));
     }
 }
