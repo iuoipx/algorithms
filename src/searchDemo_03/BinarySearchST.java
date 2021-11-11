@@ -3,7 +3,6 @@ package searchDemo_03;
 
 import edu.princeton.cs.algs4.Queue;
 
-import java.util.Iterator;
 import java.util.Scanner;
 
 /**
